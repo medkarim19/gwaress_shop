@@ -6,6 +6,16 @@ ob_start();
 ?>
 <section id="cart_items">
     <div class="container">
+        <?php if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['checkoutButton'])) {
+    echo '<div id="alertMsg" class="alert alert-primary" role="alert">
+        Your command will be validated soon. Please check your email!
+    </div>
+    <script>
+        setTimeout(function() {
+            document.getElementById("alertMsg").style.display = "none";
+        }, 5000);
+    </script>';
+} ?>
         <div class="table-responsive cart_info">
             <table class="table table-condensed">
                 <thead>
@@ -71,15 +81,16 @@ ob_start();
             </table>
         </div>
         <?php if (!empty($data['cartItems'])) : ?>
-            <a class="btn btn-default check_out">
-                Check Out
-            </a>
+            <form class="checkout-form" action="index.php?page=cart" method="POST">
+            <button class="btn btn-default check_out" name="checkoutButton">
+                    Check Out
+            </button>
+            </form>
         <?php else : ?>
-            <a class="btn btn-default check_out" disabled>
+            <button class="btn btn-default check_out" disabled>
                 Check Out
-            </a>
-        <?php endif; ?>
+            </button>
+            <?php endif; ?>
     </div>
 </section>
-
 <?php ob_end_flush(); ?>

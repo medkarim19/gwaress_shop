@@ -20,6 +20,14 @@
                                         Add to cart
                                     </button>
                                 </form>
+                                <?php if (isset($_SESSION['user_name']) && $_SESSION['user_name'] === 'admin') : ?>
+                                    <form action="index.php?page=womenshop&action=deleteProductForWomen" method="POST" class="delete-product-form">
+                                        <input type="hidden" name="product_id" value="<?php echo $product['id_produit']; ?>">
+                                        <button type="submit" class="btn btn-danger delete-product" name="submit" value="DeleteProduct">
+                                            Delete
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -34,3 +42,10 @@
         </div>
     </div>
 </section>
+
+<style>
+    .add-to-cart-form,
+    .delete-product-form {
+        margin-top: 10px;
+    }
+</style>

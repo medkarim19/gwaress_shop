@@ -40,6 +40,9 @@ if (session_status() === PHP_SESSION_NONE) {
                             <?php if (isset($_SESSION['user_id'])) : ?>
                                 <li class="nav-item"><a href='#'><?php echo $_SESSION['user_name']; ?></a></li>
                                 <li class="nav-item"><a href="index.php?page=cart" class="nav-link"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                                <?php if ($_SESSION['user_name'] === 'admin') : ?>
+                                        <li class="nav-item <?php echo ($currentPage === 'admin') ? 'active' : ''; ?>"><a href="index.php?page=admin" class="nav-link"><i class="fa fa-user"></i> Admin Panel</a></li>
+                                <?php endif; ?>    
                                 <li class="nav-item"><a href="index.php?page=logout" class="nav-link"><i class="fa fa-lock"></i> Logout</a></li>
                             <?php else : ?>
                                 <li class="nav-item <?php echo ($currentPage === 'login') ? 'active' : ''; ?>"><a href="index.php?page=login" class="nav-link"><i class="fa fa-lock"></i> Login</a></li>
