@@ -5,7 +5,7 @@ class CartModel
         $conn = Database::getInstance()->getConnection();
         $query = "
             SELECT p.id, p.id_client, p.produit_id, p.date_added, p.quantite,
-                   pr.marque, pr.prix, pr.path
+                   pr.marque_id, pr.prix, pr.path
             FROM panier p
             JOIN produit pr ON p.produit_id = pr.id_produit
             WHERE p.id_client = :userId";
@@ -16,6 +16,7 @@ class CartModel
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     public function deleteItem($cartItemId)
     {

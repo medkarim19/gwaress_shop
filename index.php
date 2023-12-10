@@ -9,6 +9,7 @@ require_once 'app\controllers\ContactController.php';
 require_once 'app\controllers\UserController.php';
 require_once 'app\controllers\CartController.php';
 require_once 'app\controllers\AdminController.php';
+require_once 'app\controllers\MarqueController.php';
 
 $indexController = new IndexController();
 $productController = new ProductController();
@@ -16,6 +17,7 @@ $contactController = new ContactController();
 $userController = new UserController();
 $cartController = new CartController();
 $adminController = new AdminController();
+$marqueController = new MarqueController();
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 if ($currentPage === 'home') {
@@ -67,6 +69,12 @@ if ($currentPage === 'home') {
             $productController->addProduct();
         } elseif ($_GET['action'] === 'updateproduct') {
             $productController->updateProduct();
+        } elseif ($_GET['action'] === 'addmarque') { 
+            $marqueController->createMarque();
+        } elseif ($_GET['action'] === 'updatemarque') { 
+            $marqueController->updateMarque();
+        } elseif ($_GET['action'] === 'deletemarque') { 
+            $marqueController->deleteMarque();
         } else {
             $adminController->index();
         }
