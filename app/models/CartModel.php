@@ -9,13 +9,25 @@ class CartModel
             FROM panier p
             JOIN produit pr ON p.produit_id = pr.id_produit
             WHERE p.id_client = :userId";
-        
-        $stmt = $conn->prepare($query);
-        $stmt->bindParam(':userId', $userId);
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        try {
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':userId', $userId);
+            $stmt->execute();
+    
+            
+            $errorInfo = $stmt->errorInfo();
+            if ($errorInfo[0] !== '00000') {
+                throw new Exception("Database Error: " . $errorInfo[2]);
+            }
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+            return []; 
+        }
     }
+    
     
 
     public function deleteItem($cartItemId)
@@ -62,6 +74,14 @@ class CartModel
         $stmt->bindParam(':productId', $productId);
         $stmt->execute();
     }   
+    public function clearCart($userId)
+    {
+        $conn = Database::getInstance()->getConnection();
+        $query = "DELETE FROM panier WHERE id_client = :userId";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+    }
 
 }
 ?>

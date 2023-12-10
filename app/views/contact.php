@@ -44,11 +44,11 @@
 	    				<h2 class="title text-center">Contact Info</h2>
 	    				<address>
 	    					<p>Gwaress Inc.</p>
-							<p>69 Rue Banane , Ariana </p>
+							<p>ENIS, SFAX </p>
 							<p>Tunisia </p>
-							<p>Mobile: +216 21 873 897</p>
+							<p>Mobile: +216 56 280 318</p>
 							<p>Fax: 1-714-252-0026</p>
-							<p>Email: info@gwaress.com</p>
+							<p>Email: gwaress3@gmail.com</p>
 	    				</address>
 	    				<div class="social-networks">
 	    					<h2 class="title text-center">Social Media</h2>

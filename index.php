@@ -10,6 +10,7 @@ require_once 'app\controllers\UserController.php';
 require_once 'app\controllers\CartController.php';
 require_once 'app\controllers\AdminController.php';
 require_once 'app\controllers\MarqueController.php';
+require_once 'app\controllers\CommandController.php';
 
 $indexController = new IndexController();
 $productController = new ProductController();
@@ -18,6 +19,7 @@ $userController = new UserController();
 $cartController = new CartController();
 $adminController = new AdminController();
 $marqueController = new MarqueController();
+$commandController = new CommandController();
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 if ($currentPage === 'home') {
@@ -44,7 +46,9 @@ if ($currentPage === 'home') {
     }
 } elseif ($currentPage === 'cart') {
     $cartController->display();
-
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['checkoutButton'])) {
+        $commandController->createCommand();
+    }
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         if ($_POST['action'] === 'updateCartItemQuantity') {
             $cartController->updateCartItemQuantity();

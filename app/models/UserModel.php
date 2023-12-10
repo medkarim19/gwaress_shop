@@ -50,6 +50,18 @@ class UserModel
         $stmt->execute([$name]);
 
         return $stmt->rowCount();
-    }    
+    }   
+    public function getUserEmail($userId)
+    {
+        $conn = Database::getInstance()->getConnection();
+        $query = "SELECT email FROM client WHERE id = :userId";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['email'] ?? null;
+    } 
 }
 ?>
