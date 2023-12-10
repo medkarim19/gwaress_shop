@@ -61,14 +61,14 @@ class CommandController extends Controller
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'gwaress3@gmail.com';
-        $mail->Password   = 'Gwaress@10'; 
+        $mail->Username   = 'mohamed-karim.bezine@enis.tn';
+        $mail->Password   = 'Karim1824.'; 
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
 
         
-        $mail->setFrom('gwaress3@gmail.com', 'chaalik');
+        $mail->setFrom('gwaress3@gmail.com', 'Gwaress Command');
         $mail->addAddress($userEmail);
 
         
