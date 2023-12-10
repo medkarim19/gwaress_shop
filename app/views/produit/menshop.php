@@ -13,7 +13,7 @@
                                 <img src="assets/images/shop/<?php echo $product['path']; ?>" width="100" height="200" />
                                 <p><?php echo $product['prix']; ?> T.N.D</p>
                                 <p><?php echo $product['nom']; ?></p>
-                                <p>Marque: <?php echo $product['marque']; ?></p>
+                                <p>Marque: <?php echo $product['nom_marque']; ?></p>
                                 <form action="index.php?page=cart&action=addToCart" method="POST" class="add-to-cart-form">
                                     <input type="hidden" name="product_id" value="<?php echo $product['id_produit']; ?>">
                                     <button type="submit" class="btn btn-default add-to-cart" name="submit" value="AddToCart">

@@ -29,9 +29,6 @@ class ProductController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
             $productId = $_POST['product_id'];
     
-            // Log to check if the product ID is received correctly
-            error_log("Product ID to delete: $productId");
-    
             $success = $this->productModel->deleteProductById($productId);
     
             if ($success) {
@@ -48,8 +45,6 @@ class ProductController extends Controller {
     public function deleteProductForWomen() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
             $productId = $_POST['product_id'];
-
-            // Call the deleteProductById function
             $success = $this->productModel->deleteProductById($productId);
 
             if ($success) {
@@ -61,9 +56,81 @@ class ProductController extends Controller {
             }
         }
     }
+    public function addProduct()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['marque_id'], $_POST['nom'], $_POST['prix'], $_POST['quantite'], $_POST['sexe_produit'])) {
+            $marque_id = $_POST['marque_id'];
+            $nom = $_POST['nom'];
+            $prix = $_POST['prix'];
+            $quantite = $_POST['quantite'];
+            $sexe_produit = $_POST['sexe_produit'];
     
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $path = $_FILES['image']['name'];
+                $uploadDirectory = 'C:\wamp64\www\gwaress\assets\images\shop';
+                $targetPath = $uploadDirectory . $path;
+    
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {  
+                } else {
+                    echo "Error uploading the file. Please try again.";
+                    return;
+                }
+            } else {
+                echo "File upload error. Please try again.";
+                return;
+            }
+    
+            $newProductId = $this->productModel->createProduct($marque_id, $nom, $prix, $quantite, $sexe_produit, $path);
+    
+            if ($newProductId !== false) {
+                header('Location: index.php?page=admin');
+                exit();
+            } else {
+                echo "Failed to add the product.";
+            }
+        } else {
+            echo "Incomplete data. Please provide all required information.";
+        }
+    }
+    public function updateProduct()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_produit'], $_POST['marque_id'], $_POST['nom'], $_POST['prix'], $_POST['quantite'], $_POST['sexe_produit'])) {
+            $id_produit = $_POST['id_produit'];
+            $marque_id = $_POST['marque_id'];
+            $nom = $_POST['nom'];
+            $prix = $_POST['prix'];
+            $quantite = $_POST['quantite'];
+            $sexe_produit = $_POST['sexe_produit'];
 
-    
+            
+            $path = ''; 
+
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDirectory = 'C:\wamp64\www\gwaress\assets\images\shop';  
+                $filename = $_FILES['image']['name'];
+                $targetPath = $uploadDirectory . $filename;
+
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+                    $path = $filename;  
+                } else {
+                    echo "Error uploading the file. Please try again.";
+                    return;
+                }
+            }
+
+            $success = $this->productModel->updateProduct($id_produit, $marque_id, $nom, $prix, $quantite, $sexe_produit, $path);
+
+            if ($success) {
+                header('Location: index.php?page=admin');
+                exit();
+            } else {
+                echo "Failed to update the product.";
+            }
+        } else {
+            echo "Incomplete data. Please provide all required information.";
+        }
+    }
+
+
 }
-
 ?>

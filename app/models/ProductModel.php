@@ -7,7 +7,7 @@ class ProductModel
     public function getProductsForHomme()
     {
         $conn = Database::getInstance()->getConnection();
-        $query = "SELECT * FROM produit WHERE produit.sexe_produit='Homme'";
+        $query = "SELECT * FROM produit INNER JOIN marque ON produit.marque_id = marque.id_marque WHERE produit.sexe_produit='Homme'";
         $stmt = $conn->prepare($query);
         $stmt->execute();
 
@@ -15,61 +15,93 @@ class ProductModel
 
         return $products;
     }
-    public function getProductsForFemme(){
+
+    public function getProductsForFemme()
+    {
         $conn = Database::getInstance()->getConnection();
-        $query = "SELECT * FROM produit WHERE produit.sexe_produit='Femme'";
+        $query = "SELECT * FROM produit INNER JOIN marque ON produit.marque_id = marque.id_marque WHERE produit.sexe_produit='Femme'";
         $stmt = $conn->prepare($query);
         $stmt->execute();
 
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $products ;
+        return $products;
     }
-    public function getProductById($productId) {
+
+    public function deleteProductById($productId)
+    {
         $conn = Database::getInstance()->getConnection();
-        $query = "SELECT * FROM produit WHERE produit.id_produit = :productId";
-        $stmt = $conn->prepare($query);
-        $stmt->bindParam(':productId', $productId);
-        $stmt->execute();
-    
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $product;
+        $conn->beginTransaction();
+
+        try {
+            $panierQuery = "DELETE FROM panier WHERE produit_id = :productId";
+            $panierStmt = $conn->prepare($panierQuery);
+            $panierStmt->bindParam(':productId', $productId);
+            $panierStmt->execute();
+            $produitQuery = "DELETE FROM produit WHERE id_produit = :productId";
+            $produitStmt = $conn->prepare($produitQuery);
+            $produitStmt->bindParam(':productId', $productId);
+            $produitStmt->execute();
+            $conn->commit();
+            return true;
+        } catch (Exception $e) {
+            $conn->rollback();
+            error_log($e->getMessage());
+            return false;
+        }
     }
-    
-    public function deleteProductById($productId) {
+
+    public function createProduct($marque_id, $nom, $prix, $quantite, $sexe_produit, $path)
+    {
+        $conn = Database::getInstance()->getConnection();
+        $query = "INSERT INTO produit (marque_id, nom, prix, quantite, sexe_produit, path) VALUES (:marqueId, :nom, :prix, :quantite, :sexe_produit, :path)";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':marqueId', $marque_id);
+        $stmt->bindParam(':nom', $nom);
+        $stmt->bindParam(':prix', $prix);
+        $stmt->bindParam(':quantite', $quantite);
+        $stmt->bindParam(':sexe_produit', $sexe_produit);
+        $stmt->bindParam(':path', $path);
+
+        try {
+            $stmt->execute();
+            return $conn->lastInsertId();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+    public function updateProduct($productId, $marque_id, $nom, $prix, $quantite, $sexe_produit, $path)
+{
     $conn = Database::getInstance()->getConnection();
 
-    // Start a transaction to ensure consistency across multiple queries
+    // Use a transaction to ensure consistency across multiple queries
     $conn->beginTransaction();
 
     try {
-        // Delete from panier table first
-        $panierQuery = "DELETE FROM panier WHERE produit_id = :productId";
-        $panierStmt = $conn->prepare($panierQuery);
-        $panierStmt->bindParam(':productId', $productId);
-        $panierStmt->execute();
+        // Update the produit table
+        $updateQuery = "UPDATE produit 
+                        SET marque_id = :marqueId, nom = :nom, prix = :prix, quantite = :quantite, sexe_produit = :sexe_produit, path = :path
+                        WHERE id_produit = :productId";
+        $updateStmt = $conn->prepare($updateQuery);
+        $updateStmt->bindParam(':marqueId', $marque_id);
+        $updateStmt->bindParam(':nom', $nom);
+        $updateStmt->bindParam(':prix', $prix);
+        $updateStmt->bindParam(':quantite', $quantite);
+        $updateStmt->bindParam(':sexe_produit', $sexe_produit);
+        $updateStmt->bindParam(':path', $path); // Corrected from $updateStmt->bindParam(':path', $path);
+        $updateStmt->bindParam(':productId', $productId);
+        $updateStmt->execute();
 
-        // Then delete from produit table
-        $produitQuery = "DELETE FROM produit WHERE id_produit = :productId";
-        $produitStmt = $conn->prepare($produitQuery);
-        $produitStmt->bindParam(':productId', $productId);
-        $produitStmt->execute();
-
-        // If both queries succeed, commit the transaction
+        // If the update query succeeds, commit the transaction
         $conn->commit();
         return true;
     } catch (Exception $e) {
         // If an error occurs, rollback the transaction
         $conn->rollback();
-
-        // Log the error message
         error_log($e->getMessage());
-
         return false;
     }
 }
 
-    
-    
-    
 }
 ?>

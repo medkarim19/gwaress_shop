@@ -50,8 +50,6 @@ if ($currentPage === 'home') {
             $cartController->removeFromCart();
         }
     }
-    
-    
 
     if (isset($_GET['action']) && $_GET['action'] === 'addToCart') {
         if (!isset($_SESSION['user_id'])) {
@@ -64,7 +62,17 @@ if ($currentPage === 'home') {
 } elseif ($currentPage === 'logout') {
     $userController->logout();
 } elseif ($currentPage === 'admin') {
-    $adminController->index();
+    if (isset($_GET['action'])) {
+        if ($_GET['action'] === 'addproduct') {
+            $productController->addProduct();
+        } elseif ($_GET['action'] === 'updateproduct') {
+            $productController->updateProduct();
+        } else {
+            $adminController->index();
+        }
+    } else {
+        $adminController->index();
+    }
 }
 
 ob_end_flush();
