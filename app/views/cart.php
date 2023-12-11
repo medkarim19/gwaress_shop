@@ -31,7 +31,7 @@ $totalAmount = 0;
                                 </td>
 
                                 <td class="cart_description">
-                                    <p><?= isset($row1['marque']) ? $row1['marque'] : ''; ?></p>
+                                    <p><?= isset($row1['nom_marque']) ? $row1['nom_marque'] : ''; ?></p>
                                 </td>
                                 <td class="cart_quantity">
                                     <?= isset($row1['prix']) ? $row1['prix'] . ' T.N.D' : ''; ?>

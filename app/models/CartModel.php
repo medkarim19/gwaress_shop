@@ -5,9 +5,11 @@ class CartModel
         $conn = Database::getInstance()->getConnection();
         $query = "
             SELECT p.id, p.id_client, p.produit_id, p.date_added, p.quantite,
-                   pr.marque_id, pr.prix, pr.path
+                   pr.marque_id, pr.prix, pr.path,
+                   m.nom_marque  -- Add the marque name column
             FROM panier p
             JOIN produit pr ON p.produit_id = pr.id_produit
+            JOIN marque m ON pr.marque_id = m.id_marque  -- Join with marque table
             WHERE p.id_client = :userId";
     
         try {
@@ -15,7 +17,6 @@ class CartModel
             $stmt->bindParam(':userId', $userId);
             $stmt->execute();
     
-            
             $errorInfo = $stmt->errorInfo();
             if ($errorInfo[0] !== '00000') {
                 throw new Exception("Database Error: " . $errorInfo[2]);
