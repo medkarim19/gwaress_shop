@@ -11,6 +11,7 @@ require_once 'app\controllers\CartController.php';
 require_once 'app\controllers\AdminController.php';
 require_once 'app\controllers\MarqueController.php';
 require_once 'app\controllers\CommandController.php';
+require_once 'app\models\ProductModel.php';
 
 $indexController = new IndexController();
 $productController = new ProductController();
@@ -20,6 +21,7 @@ $cartController = new CartController();
 $adminController = new AdminController();
 $marqueController = new MarqueController();
 $commandController = new CommandController();
+$pm = new ProductModel();
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 if ($currentPage === 'home') {
@@ -27,12 +29,16 @@ if ($currentPage === 'home') {
 } elseif ($currentPage === 'menshop') {
     if (isset($_GET['action']) && $_GET['action'] === 'deleteProductForMen') {
         $productController->deleteProductForMen();
+    } elseif (isset($_GET['search']) && $_GET['action'] === 'searchProductsForMen') {
+        $productController->searchProductsForMen(); 
     } else {
         $productController->menshop();
     }
 } elseif ($currentPage === 'womenshop') {
     if (isset($_GET['action']) && $_GET['action'] === 'deleteProductForWomen') {
         $productController->deleteProductForWomen();
+    } elseif (isset($_GET['search']) && $_GET['action'] === 'searchProductsForWomen') {
+        $productController->searchProductsForWomen(); 
     } else {
         $productController->womenshop();
     }

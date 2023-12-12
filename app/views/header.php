@@ -15,7 +15,6 @@ if (session_status() === PHP_SESSION_NONE) {
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/prettyPhoto.css" rel="stylesheet">
-    <link href="assets/css/price-range.css" rel="stylesheet">
     <link href="assets/css/animate.css" rel="stylesheet">
     <link href="assets/css/main.css" rel="stylesheet">
     <link href="assets/css/responsive.css" rel="stylesheet">
@@ -77,9 +76,11 @@ if (session_status() === PHP_SESSION_NONE) {
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="search_box pull-right">
-                        <input type="text" placeholder="Search" class="form-control" />
-                    </div>
+                    <?php if ($currentPage === 'menshop' || $currentPage === 'womenshop' ) :  ?>
+                            <div class="search_box pull-right">
+                                <input type="text" id="searchInputHeader" placeholder="Search">
+                            </div>
+                    <?php endif ; ?>
                 </div>
             </div>
         </div>

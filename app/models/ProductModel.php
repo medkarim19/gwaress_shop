@@ -71,37 +71,58 @@ class ProductModel
         }
     }
     public function updateProduct($productId, $marque_id, $nom, $prix, $quantite, $sexe_produit, $path)
-{
-    $conn = Database::getInstance()->getConnection();
-
-    // Use a transaction to ensure consistency across multiple queries
-    $conn->beginTransaction();
-
-    try {
-        // Update the produit table
-        $updateQuery = "UPDATE produit 
-                        SET marque_id = :marqueId, nom = :nom, prix = :prix, quantite = :quantite, sexe_produit = :sexe_produit, path = :path
-                        WHERE id_produit = :productId";
-        $updateStmt = $conn->prepare($updateQuery);
-        $updateStmt->bindParam(':marqueId', $marque_id);
-        $updateStmt->bindParam(':nom', $nom);
-        $updateStmt->bindParam(':prix', $prix);
-        $updateStmt->bindParam(':quantite', $quantite);
-        $updateStmt->bindParam(':sexe_produit', $sexe_produit);
-        $updateStmt->bindParam(':path', $path); // Corrected from $updateStmt->bindParam(':path', $path);
-        $updateStmt->bindParam(':productId', $productId);
-        $updateStmt->execute();
-
-        // If the update query succeeds, commit the transaction
-        $conn->commit();
-        return true;
-    } catch (Exception $e) {
-        // If an error occurs, rollback the transaction
-        $conn->rollback();
-        error_log($e->getMessage());
-        return false;
+    {
+        $conn = Database::getInstance()->getConnection();
+        $conn->beginTransaction();
+        try {
+            $updateQuery = "UPDATE produit 
+                            SET marque_id = :marqueId, nom = :nom, prix = :prix, quantite = :quantite, sexe_produit = :sexe_produit, path = :path
+                            WHERE id_produit = :productId";
+            $updateStmt = $conn->prepare($updateQuery);
+            $updateStmt->bindParam(':marqueId', $marque_id);
+            $updateStmt->bindParam(':nom', $nom);
+            $updateStmt->bindParam(':prix', $prix);
+            $updateStmt->bindParam(':quantite', $quantite);
+            $updateStmt->bindParam(':sexe_produit', $sexe_produit);
+            $updateStmt->bindParam(':path', $path);
+            $updateStmt->bindParam(':productId', $productId);
+            $updateStmt->execute();
+            $conn->commit();
+            return true;
+        } catch (Exception $e) {
+            $conn->rollback();
+            error_log($e->getMessage());
+            return false;
+        }
     }
-}
+    public function getProductsForFemmeByName($name)
+    {
+        $conn = Database::getInstance()->getConnection();
+        $query = "SELECT * FROM produit 
+                INNER JOIN marque ON produit.marque_id = marque.id_marque 
+                WHERE produit.sexe_produit = 'Femme' AND produit.nom LIKE :productName";
 
+        $productName = '%' . $name . '%';  
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':productName', $productName);  
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $products;
+    }
+    public function getProductsForHommeByName($name)
+    {
+        $conn = Database::getInstance()->getConnection();
+        $query = "SELECT * FROM produit 
+                INNER JOIN marque ON produit.marque_id = marque.id_marque 
+                WHERE produit.sexe_produit = 'Homme' AND produit.nom LIKE :productName";
+
+        $productName = '%' . $name . '%';  
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':productName', $productName);  
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $products;
+    }
 }
 ?>

@@ -1,4 +1,4 @@
-<footer id="footer">
+<footer id="footer" style='padding-top: 5px;'>
     <div class="footer-widget">
         <div class="container">
             <div class="row">
@@ -50,14 +50,13 @@
     </div>
 </footer>
 <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery.scrollUp.min.js"></script>
-    <script src="assets/js/price-range.js"></script>
-    <script src="assets/js/jquery.prettyPhoto.js"></script>
-    <script src="assets/js/main.js"></script>
-        
-
-
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/jquery.scrollUp.min.js"></script>
+<script src="assets/js/price-range.js"></script>
+<script src="assets/js/jquery.prettyPhoto.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/menshop-script.js"></script>
+<script src="assets/js/womenshop-script.js"></script>
 </body>
 
 </html>

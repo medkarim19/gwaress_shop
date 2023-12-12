@@ -12,19 +12,48 @@ class ProductController extends Controller {
     }
 
     public function menshop() {
-        $products = $this->productModel->getProductsForHomme();
         $currentPage = 'menshop';
         include 'app/views/header.php';
-        $this->loadView('produit/menshop', ['products' => $products]);
+        $products = $this->productModel->getProductsForHomme();
+        $this->displayProducts($products);
         include 'app/views/footer.php';
     }
     public function womenshop() {
-        $products = $this->productModel->getProductsForFemme();
         $currentPage = 'womenshop';
         include 'app/views/header.php';
-        $this->loadView('produit/womenshop', ['products' => $products]);
+        $products = $this->productModel->getProductsForFemme();
+        $this->displayProducts($products);
         include 'app/views/footer.php';
     }
+    
+    public function searchProductsForWomen() {
+        $currentPage = 'womenshop';
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
+            $searchQuery = $_GET['search'];
+            $products = $this->productModel->getProductsForFemmeByName($searchQuery);
+            $this->displayProducts($products);
+        } else {
+            echo '<p>No products found.</p>';
+        }
+    }
+
+    public function searchProductsForMen() {
+        $currentPage = 'menshop';
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['search'])) {
+            $searchQuery = $_GET['search'];
+            error_log('Search query for men: ' . $searchQuery);
+            $products = $this->productModel->getProductsForHommeByName($searchQuery);
+            $this->displayProducts($products);
+        } else {
+            echo '<p>No products found.</p>';
+        }
+    }
+
+    
+    private function displayProducts($products) {
+        $this->loadView('produit/womenshop', ['products' => $products]);
+    }
+    
     public function deleteProductForMen() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
             $productId = $_POST['product_id'];

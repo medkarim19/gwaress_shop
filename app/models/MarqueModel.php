@@ -6,14 +6,10 @@ class MarqueModel
 {
     public function getAllMarques()
     {
-        // Your database query to fetch marque IDs
         $query = "SELECT id_marque FROM marque";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
-
-        // Fetch all marque IDs
         $marques = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         return $marques;
     }
 
@@ -24,9 +20,7 @@ class MarqueModel
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':marqueId', $marqueId);
         $stmt->execute();
-
         $marque = $stmt->fetch(PDO::FETCH_ASSOC);
-
         return $marque;
     }
 
